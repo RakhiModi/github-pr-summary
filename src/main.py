@@ -11,7 +11,7 @@ import pandas as pd
 
 REPO_URL = 'https://api.github.com/repos/helix-editor/helix/pulls?state=all&per_page=100'
 
-
+# to get data by hitting github api
 def get_pr_data():
     response = requests.get(REPO_URL)
     data = response.json()
@@ -41,6 +41,7 @@ def get_pr_data():
     return pr
 
 
+# Creating a table from the dict output of get_pr_data()
 def create_dataframe():
     pr_data = get_pr_data()
     with open("pr_data", "w") as f:
@@ -53,13 +54,7 @@ def create_dataframe():
     return df
 
 
-def create_html_table():
-    dataframe = create_dataframe()
-    output = build_table(dataframe, 'blue_light')
-    send_mail(output)
-    return "Mail sent successfully"
-
-
+# To print the email to console
 def print_mail():
     dataframe = create_dataframe()
     body = dataframe.to_string()
@@ -71,7 +66,17 @@ def print_mail():
     print(msg.as_string())
     print(body)
 
+    
+# To create a html table to be passed in email
+def create_html_table():
+    dataframe = create_dataframe()
+    output = build_table(dataframe, 'blue_light')
+    send_mail(output)
+    return "Mail sent successfully"
 
+
+
+# To draft email body
 def send_mail(body):
     msg = MIMEMultipart()
     msg['Subject'] = 'PR summary'  # % time_stamp.strftime('%Y-%m-%d %H:%M:%S')
